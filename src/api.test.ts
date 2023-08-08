@@ -1,38 +1,39 @@
-import request from "supertest";
-import { app } from "./index"; // Assuming your Express app is exported as "app"
+import request from 'supertest';
+import { app } from './index'; // Assuming your Express app is exported as "app"
 
-describe("API Endpoints", () => {
+describe('API Endpoints', () => {
   // Test data
   const userLocation = { latitude: 37.7749, longitude: -122.4194 }; // San Francisco
 
-  describe("/broadcast", () => {
-    it("should broadcast a message with a location", async () => {
+  describe('/broadcast', () => {
+    it('should broadcast a message with a location', async () => {
       const response = await request(app)
-        .post("/broadcast")
-        .send({ message: "Hello, nearby users!", ...userLocation });
+        .post('/broadcast')
+        .send({ message: 'Hello, nearby users!', ...userLocation });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: "Message broadcasted successfully",
+        message: 'Message broadcasted successfully',
       });
     });
 
-    it("should not broadcast a message without required data", async () => {
-      const response = await request(app).post("/broadcast").send({});
+    it('should not broadcast a message without required data', async () => {
+      const response = await request(app).post('/broadcast').send({});
 
       expect(response.status).toBe(400);
     });
   });
 
-  describe("getMessagesNearby", () => {
-    it("should get messages nearby a specific location", async () => {
+  describe('getMessagesNearby', () => {
+    it('should get messages nearby a specific location', async () => {
       // Assuming these coordinates are within the defined RADIUS_THRESHOLD
       const latitude = 37.7749;
       const longitude = -122.4194;
+      const range = 100;
 
       const response = await request(app)
-        .get("/getMessagesNearby")
-        .query({ latitude, longitude });
+        .get('/getMessagesNearby')
+        .query({ latitude, longitude, range });
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
@@ -41,11 +42,11 @@ describe("API Endpoints", () => {
       // Add more assertions based on your expected behavior and test data
     });
 
-    it("should return an error for missing latitude or longitude", async () => {
-      const response = await request(app).get("/getMessagesNearby");
+    it('should return an error for missing latitude or longitude', async () => {
+      const response = await request(app).get('/getMessagesNearby');
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toBe("Latitude and longitude are required");
+      expect(response.body.error).toBe('Latitude, longitude, and range are required');
     });
   });
 });

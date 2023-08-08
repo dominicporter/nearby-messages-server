@@ -1,4 +1,4 @@
-import { Messages } from "./types";
+import { Messages } from './types';
 
 const MESSAGE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
@@ -34,15 +34,23 @@ export const getNearbyMessages = (
   longitude: number,
   maxDistanceKm: number
 ) => {
-  const nearbyMessages = Object.values(messages).filter((message) => {
-    const distanceKm = calculateDistance(
-      latitude,
-      longitude,
-      message.latitude,
-      message.longitude
-    );
-    return distanceKm <= maxDistanceKm;
-  });
+  const nearbyMessages = Object.entries(messages)
+    .map(([timestamp, message]) => ({
+      timestamp: parseInt(timestamp),
+      latitude: message.latitude,
+      longitude: message.longitude,
+      message: message.message,
+    }))
+    .filter((message) => {
+      const distance = calculateDistance(
+        latitude,
+        longitude,
+        message.latitude,
+        message.longitude
+      );
+      return distance <= maxDistanceKm;
+    })
+    .sort((a, b) => b.timestamp - a.timestamp); // Sort messages by timestamp in descending order
 
   return nearbyMessages;
 };
