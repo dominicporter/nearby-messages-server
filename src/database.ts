@@ -32,16 +32,16 @@ export const cleanupMessages = () => {
 export const getNearbyMessages = (
   latitude: number,
   longitude: number,
-  maxDistance: number
+  maxDistanceKm: number
 ) => {
   const nearbyMessages = Object.values(messages).filter((message) => {
-    const distance = calculateDistance(
+    const distanceKm = calculateDistance(
       latitude,
       longitude,
       message.latitude,
       message.longitude
     );
-    return distance <= maxDistance;
+    return distanceKm <= maxDistanceKm;
   });
 
   return nearbyMessages;

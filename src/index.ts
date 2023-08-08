@@ -32,7 +32,7 @@ app.get('/getMessagesNearby', (req, res) => {
   // Convert latitude, longitude, and range to numbers
   const lat = parseFloat(latitude as string);
   const lon = parseFloat(longitude as string);
-  const maxDistance = parseFloat(range as string) * 1000; // Convert range from km to meters
+  const maxDistance = parseFloat(range as string);
 
   const nearbyMessages = getNearbyMessages(lat, lon, maxDistance);
   res.json(nearbyMessages);
