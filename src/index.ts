@@ -38,7 +38,6 @@ app.get('/getMessagesNearby', (req, res) => {
   res.json(nearbyMessages);
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   startMessageCleanup(); // Start the message cleanup task
