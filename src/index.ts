@@ -1,7 +1,8 @@
-import express from "express";
-import bodyParser from "body-parser";
-import { startMessageCleanup } from "./messageCleanup";
-import { getNearbyMessages, saveMessage } from "./database";
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors'; // Import cors middleware
+import { startMessageCleanup } from './messageCleanup';
+import { getNearbyMessages, saveMessage } from './database';
 
 export const app = express();
 const port = 3001;
@@ -9,24 +10,28 @@ const port = 3001;
 // Middleware to parse JSON data
 app.use(bodyParser.json());
 
+// Enable CORS with default options (allow all origins)
+app.use(cors());
 
 // API endpoint to broadcast messages to nearby users
-app.post("/broadcast", (req, res) => {
+app.post('/broadcast', (req, res) => {
   const { message, latitude, longitude } = req.body;
   if (!message || !latitude || !longitude) {
-    return res.status(400).json({ error: "Invalid data" });
+    return res.status(400).json({ error: 'Invalid data' });
   }
 
   const timestamp = Date.now(); // Current timestamp
   saveMessage(message, latitude, longitude, timestamp);
-  res.json({ message: "Message broadcasted successfully" });
+  res.json({ message: 'Message broadcasted successfully' });
 });
 
 // API endpoint to get messages nearby a specific location
 app.get('/getMessagesNearby', (req, res) => {
   const { latitude, longitude, range } = req.query;
   if (!latitude || !longitude || !range) {
-    return res.status(400).json({ error: 'Latitude, longitude, and range are required' });
+    return res
+      .status(400)
+      .json({ error: 'Latitude, longitude, and range are required' });
   }
 
   // Convert latitude, longitude, and range to numbers
@@ -42,6 +47,3 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   startMessageCleanup(); // Start the message cleanup task
 });
-
-
-
