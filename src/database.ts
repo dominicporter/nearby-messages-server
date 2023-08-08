@@ -29,19 +29,21 @@ export const cleanupMessages = () => {
   });
 };
 
-export const getNearbyMessages = (lat: number, lon: number) => {
-  const RADIUS_THRESHOLD = 1.0;
-
-  // Filter messages that are within the specified radius
+export const getNearbyMessages = (
+  latitude: number,
+  longitude: number,
+  maxDistance: number
+) => {
   const nearbyMessages = Object.values(messages).filter((message) => {
     const distance = calculateDistance(
-      lat,
-      lon,
+      latitude,
+      longitude,
       message.latitude,
       message.longitude
     );
-    return distance <= RADIUS_THRESHOLD;
+    return distance <= maxDistance;
   });
+
   return nearbyMessages;
 };
 

@@ -24,18 +24,17 @@ app.post("/broadcast", (req, res) => {
 
 // API endpoint to get messages nearby a specific location
 app.get('/getMessagesNearby', (req, res) => {
-  const { latitude, longitude } = req.query;
-  if (!latitude || !longitude) {
-    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  const { latitude, longitude, range } = req.query;
+  if (!latitude || !longitude || !range) {
+    return res.status(400).json({ error: 'Latitude, longitude, and range are required' });
   }
 
-  // Convert latitude and longitude to numbers
+  // Convert latitude, longitude, and range to numbers
   const lat = parseFloat(latitude as string);
   const lon = parseFloat(longitude as string);
+  const maxDistance = parseFloat(range as string) * 1000; // Convert range from km to meters
 
-  // Define a radius threshold (adjust as needed)
-  const nearbyMessages = getNearbyMessages(lat, lon);
-
+  const nearbyMessages = getNearbyMessages(lat, lon, maxDistance);
   res.json(nearbyMessages);
 });
 
